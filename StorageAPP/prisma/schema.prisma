@@ -10,12 +10,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model User{
   id Int @id @default(autoincrement())
   name String @db.VarChar(100)
   email String @unique
   password String
+  active Boolean
   createdAt DateTime @default(now())
   folders Folder[]
   files File[]
@@ -26,32 +26,34 @@ model Folder{
   id Int @id @default(autoincrement())
   name String
   createdAt DateTime @default(now())
-  owner User @relation(fields: [ownerId],references: [id])
+  owner User @relation(fields: [ownerId],references: [id],onDelete: Cascade)
   ownerId Int
-  parentFolder Folder? @relation("FolderSubFolder",fields: [parentFolderId],references: [id])
-  parentFolderId Int ?
+  parentFolder Folder? @relation("FolderSubFolder",fields: [parentFolderId],references: [id], onDelete: Cascade)
+  parentFolderId Int?
   childFolders Folder[] @relation("FolderSubFolder")
   files File[]
 }
 
 model File{
   id Int @id @default(autoincrement())
-  name String
+  name String @unique //Google cloud name
+  originalName String // Original Name
   createdAt DateTime @default(now())
-  owner User @relation(fields: [ownerId],references: [id])
+  owner User @relation(fields: [ownerId],references: [id], onDelete: Cascade)
   ownerId Int
-  folder Folder? @relation(fields: [folderId], references: [id])
+  folder Folder? @relation(fields: [folderId],references: [id], onDelete: Cascade)
   folderId Int?
- 
 }
 
+// Implementar las suscripciones
 
 model Subscription{
   id Int @id @default(autoincrement())
   type SubscriptionType @default(FREE)
+  stripeCustomerId String @unique
   createdAt DateTime @default(now())
-  user User @relation(fields: [userId], references: [id])
-  userId Int
+  user User @relation(fields: [userID], references: [id], onDelete: Cascade)
+  userID Int
 }
 
 enum SubscriptionType{

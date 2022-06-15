@@ -1,9 +1,12 @@
-require("dotenv").config()
+require("dotenv").config() // Cargar las variables de entorno del .env
 
 const config = {
-    name: process.env.NAME 
+    port:process.env.PORT,
+    bucketName:process.env.BUCKET_NAME,
+    stripePublicKey:process.env.STRIPE_PUBLIC_KEY,
+    stripeSecretKey:process.env.STRIPE_SECRET_KEY,
+    paypalPublicKey:process.env.PAYPAL_PUBLIC_KEY,
+    paypalSecretKey:process.env.PAYPAL_SECRET_KEY
 }
-
-console.log(config.name);
 
 module.exports = config

@@ -1,13 +1,30 @@
-const express = require("express");
+const express = require("express")
+const { port } = require("./config")
 
-const app = express();
+// Importacion de rutas
+const files = require("./routes/files")
+const folders = require("./routes/folders")
+const users = require("./routes/users")
+const subscriptions = require("./routes/subscriptions")
 
-app.get("/", (req, res) => {
-  return res.json({
-    message: "Hola mundo",
-  });
-});
+const app = express()
 
-app.listen(4000, () => {
-  console.log("Listening on http://localhost:" + 4000);
-});
+// Usando middleware
+app.use(express.json())
+
+// uso de rutas
+files(app)
+folders(app)
+users(app)
+subscriptions(app)
+
+app.get("/",(req,res)=>{
+    return res.json({
+        message:"Hola mundo"
+    })
+})
+
+
+app.listen(port,()=>{
+    console.log("Listening on: http://localhost:"+port)
+})
